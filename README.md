@@ -153,7 +153,7 @@ python newsqa_to_squad.py --newsqa_file split_data/dev.csv --output_file newsqa_
 ---
 ## Acknowledgements
 
-Our TriviaQA script modifies code released in [TrivaiQA repo](https://github.com/mandarjoshi90/triviaqa/) In particular, we take inspiration from [convert_to_squad_format.py](https://github.com/mandarjoshi90/triviaqa/blob/master/utils/convert_to_squad_format.py) for all our scripts.
+Our TriviaQA script modifies code released in [TriviaQA repo](https://github.com/mandarjoshi90/triviaqa/) In particular, we take inspiration from [convert_to_squad_format.py](https://github.com/mandarjoshi90/triviaqa/blob/master/utils/convert_to_squad_format.py) for all our scripts.
 
 We also use modified code from the [Nautral Question browser script](https://github.com/google-research-datasets/natural-questions/blob/master/nq_browser.py) to process Natural Questions examples.
 

@@ -134,3 +134,39 @@ def extract_tar_gz_file(file_dest, new_path_to_file):
         for member in tqdm(iterable=tar.getmembers(), total=len(tar.getmembers()), desc='Extracting'):
             # Extract member
             tar.extract(member=member, path=new_path_to_file)
+
+"""
+Download the dataset Natural Questions.
+Use the gsuutil library from the developer to download and extract the dataset
+
+path: The destination path to save the compressed and uncompressed files
+"""
+def download_natural_questions(path):
+    # check if the input path exists
+    if not os.path.exists(path):
+        raise Exception("The input path does not exist. Please create it before\
+                        calling the method.")
+
+    # combine the original path with the stripped name (w/o extension) of the dataset
+    new_path_to_file = path + 'natural_questions'
+
+    if not os.path.exists(new_path_to_file):
+      # create a new directory
+        os.makedirs(new_path_to_file)
+    else:
+        print("Deleted all content in %s"%new_path_to_file)
+        # delete all files in the directory
+        for file in os.scandir(new_path_to_file):
+            os.remove(file.path)
+    
+    # check if the directory has enough space
+    check_remaining_space(num_gb=45, path=new_path_to_file)
+
+    # gsutil -m cp -R gs://natural_questions/v1.0 <path to your data directory>
+    get_data = 'gsutil -m cp -R gs://natural_questions/v1.0 ' + new_path_to_file
+    exit_code = os.system(get_data)
+    print("`%s` ran with exit code %d" % (get_data, exit_code))
+
+    # size of the generated folder
+    size = get_human_readable_size(get_dir_size(new_path_to_file))
+    print("\nSize of the %s directory: %s"%(new_path_to_file, size))

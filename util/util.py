@@ -4,6 +4,9 @@ import pandas as pd
 import os
 import spacy
 
+from urllib.request import urlopen
+import json
+
 import requests
 import tarfile
 from tqdm import tqdm
@@ -166,6 +169,48 @@ def download_natural_questions(path):
     get_data = 'gsutil -m cp -R gs://natural_questions/v1.0 ' + new_path_to_file
     exit_code = os.system(get_data)
     print("`%s` ran with exit code %d" % (get_data, exit_code))
+
+    # size of the generated folder
+    size = get_human_readable_size(get_dir_size(new_path_to_file))
+    print("\nSize of the %s directory: %s"%(new_path_to_file, size))
+
+"""
+Download the dataset Question Answering in Context.
+Use the json library to download and save the dataset
+
+path: The destination path to save the compressed and uncompressed files
+"""
+def download_quac(path):
+    # check if the input path exists
+    if not os.path.exists(path):
+        raise Exception("The input path does not exist. Please create it before\
+                        calling the method.")
+
+    # combine the original path with the stripped name (w/o extension) of the dataset
+    new_path_to_file = path + 'QuAC/'
+
+    if not os.path.exists(new_path_to_file):
+      # create a new directory
+        os.makedirs(new_path_to_file)
+    else:
+        print("Deleted all content in %s"%new_path_to_file)
+        # delete all files in the directory
+        for file in os.scandir(new_path_to_file):
+            os.remove(file.path)
+    
+    # check if the directory has enough space
+    check_remaining_space(num_gb=0.25, path=new_path_to_file)
+
+    _URL = ["https://s3.amazonaws.com/my89public/quac/train_v0.2.json",
+            'https://s3.amazonaws.com/my89public/quac/val_v0.2.json']
+    _name = ['train_v0.2.json', 'val_v0.2.json']
+
+    for url, name in zip(_URL, _name):
+        data = urlopen(url).read()
+        output = json.loads(data)
+        json_string = json.dumps(output)
+        with open(new_path_to_file + name, 'w') as outfile:
+            json.dump(json_string, outfile)
 
     # size of the generated folder
     size = get_human_readable_size(get_dir_size(new_path_to_file))

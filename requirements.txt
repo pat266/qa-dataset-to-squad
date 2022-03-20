@@ -1,5 +1,5 @@
 # pip install -r "requirements.txt"
 datasets==2.0.0
 transformers==4.17.0
-gsutil 5.8
+gsutil==5.8
 tqdm==4.63.0
